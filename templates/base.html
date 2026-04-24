@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Portfólio{% endblock %}</title>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- FUNDO MATRIX -->
+    <canvas id="matrix"></canvas>
+
+    <!-- MENU FIXO MATRIX -->
+    <header class="site-header">
+        <nav class="matrix-nav">
+            <ul>
+                <li><a class="btn-matrix" href="{{ url_for('index') }}">Início</a></li>
+                <li><a class="btn-matrix" href="{{ url_for('sobre_mim') }}">História</a></li>
+                <li><a class="btn-matrix" href="{{ url_for('static', filename='curriculonovo.pdf') }}" target="_blank">Currículo</a></li>
+                <li><a class="btn-matrix" href="https://github.com/frribeiro716-max/pra" target="_blank">PRAS</a></li>
+
+                <li><a class="btn-matrix"  href="{{ url_for('static', filename='corpo_docente_matrix.pdf') }}" target="_blank">Corpo Docente</a></li>
+
+                <li><a class="btn-matrix" href="{{ url_for('static', filename='disciplinas_matrix.pdf') }}" target="_blank">Disciplinas</a></li>
+
+
+            </ul>
+        </nav>
+    </header>
+
+    <!-- CONTEÚDO DAS PÁGINAS -->
+    <main class="matrix-container">
+        {% block content %}{% endblock %}
+    </main>
+    <footer style="text-align:center; margin:40px 0;">
+    <a class="btn-matrix" href="{{ url_for('index') }}">Voltar ao Menu</a>
+    </footer>
+
+
+    <!-- SCRIPT MATRIX -->
+    <script>
+    const canvas = document.getElementById("matrix");
+    const ctx = canvas.getContext("2d");
+
+    canvas.height = window.innerHeight;
+    canvas.width = window.innerWidth;
+
+    const letters = "01";
+    const fontSize = 16;
+    const columns = canvas.width / fontSize;
+
+    const drops = Array(Math.floor(columns)).fill(1);
+
+    function draw() {
+        ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "#00ff9f";
+        ctx.font = fontSize + "px monospace";
+
+        drops.forEach((y, i) => {
+            const text = letters[Math.floor(Math.random() * letters.length)];
+            ctx.fillText(text, i * fontSize, y * fontSize);
+
+            if (y * fontSize > canvas.height && Math.random() > 0.975) {
+                drops[i] = 0;
+            }
+            drops[i]++;
+        });
+    }
+
+    setInterval(draw, 35);
+    </script>
+
+    <!-- SCRIPT EFEITO DIGITADO -->
+    <script>
+    const text = "PORTFÓLIO DE PROGRAMAÇÃO 2026";
+    let i = 0;
+
+    function typeWriter() {
+        if (i < text.length) {
+            document.getElementById("typewriter").innerHTML += text.charAt(i);
+            i++;
+            setTimeout(typeWriter, 80);
+        }
+    }
+
+    window.onload = typeWriter;
+    </script>
+
+</body>
+</html>

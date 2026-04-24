@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}Sobre mim{% endblock %}
+
+{% block content %}
+<section class="about">
+  <h1>Sobre mim</h1>
+  <h2 class="titulo-matrix">A Minha História</h2>
+
+<audio id="audioHistoria" src="{{ url_for('static', filename='audio/historia.mp3') }}"></audio>
+
+<div style="text-align:center; margin-top:20px;">
+    <button class="btn-matrix" onclick="document.getElementById('audioHistoria').play();">
+        ▶ Ouvir História
+    </button>
+</div>
+
+
+  {% if imagem_existe %}
+    <div class="image-wrap">
+      <img src="{{ url_for('static', filename=imagem) }}" alt="Portfolio Francisco">
+    </div>
+  {% else %}
+    <div class="notice">
+      <p>Imagem de apresentação não encontrada. Coloque <strong>portfolio_francisco.png</strong> na pasta <code>static/</code>.</p>
+    </div>
+  {% endif %}
+
+  <article class="bio">
+    <p><strong>Formação</strong> — Licenciatura em Marketing pela Escola Superior de Ciências Empresariais de Setúbal (média 13). Curso de Webdesign.</p>
+
+    <p><strong>Início de carreira</strong> — Formador de aplicações informáticas na Novabase, lecionando na área de tesouraria para a Segurança Social em Portalegre.</p>
+
+    <p><strong>Sonae</strong> — Em 2002 entrei como gestor estagiário. Fui chefe de secção no Continente Modelo na Ilha da Madeira (2 anos), depois chefe de frutas e legumes no Continente de Matosinhos (1 ano) e, mais tarde, gerente de loja no Continente Bom Dia, onde gerei 5 lojas ao longo de 18 anos. Fui promovido a gestor de área, função que desempenhei durante 1 ano.</p>
+
+    <p><strong>Requalificação</strong> — Fiz um interregno e tirei um curso de Programador Nível 4 no IEFP para aprofundar competências em tecnologia e programação.</p>
+
+    <p><strong>Competências</strong> — Gestão de equipas, operações de retalho, formação, webdesign básico e programação. Perfil orientado para resultados, adaptabilidade e aprendizagem contínua.</p>
+  </article>
+
+  <div class="actions">
+    <a class="btn" href="{{ url_for('static', filename='codigo.pdf') }}" target="_blank" rel="noopener">Ver CV / Código (PDF)</a>
+    <a class="btn secondary" href="{{ url_for('index') }}">Voltar</a>
+
+    <h2>O meu livro</h2>
+
+    <iframe 
+      src="{{ url_for('static', filename='livro_sobre_mim.pdf') }}" 
+      width="100%" 
+      height="600px">
+    </iframe>
+
+    <!-- Botão de narração -->
+    <button class="btn" onclick="lerNarracao()">Ouvir narração</button>
+  </div>
+</section>
+
+<!-- Script da narração -->
+<script>
+function lerNarracao() {
+    const texto = `{{ texto_pdf | safe }}`;
+    const msg = new SpeechSynthesisUtterance(texto);
+
+    // Procurar voz masculina (PT-PT se existir)
+    const vozes = speechSynthesis.getVoices();
+
+    const vozMasculina = vozes.find(v =>
+        v.lang.toLowerCase().includes("pt") &&
+        (v.name.toLowerCase().includes("male") ||
+         v.name.toLowerCase().includes("man") ||
+         v.name.toLowerCase().includes("português"))
+    );
+
+    if (vozMasculina) {
+        msg.voice = vozMasculina;
+    }
+
+    msg.rate = 1;
+    msg.pitch = 1;
+
+    speechSynthesis.speak(msg);
+}
+</script>
+
+{% endblock %}
